@@ -22,6 +22,8 @@
 #include "stm32g0xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "LIN_usart2.h"
+#include "rs485_usart1.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -181,7 +183,17 @@ void USART1_IRQHandler(void)
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */
-
+    if((__HAL_UART_GET_FLAG(&huart1,UART_FLAG_IDLE) != RESET))
+    {
+        //清除空闲状态标志
+        __HAL_UART_CLEAR_IDLEFLAG(&huart1);
+        //关闭DMA传输
+        HAL_UART_DMAStop(&huart1);
+        //计算接收到的数据长度
+        uint8_t rxlen = RS485_MAXSIZE - __HAL_DMA_GET_COUNTER(&hdma_usart1_rx);
+        //调用回调函数
+        USAR_UART_IDLECallback(&huart1,rxlen );
+    }
   /* USER CODE END USART1_IRQn 1 */
 }
 
@@ -195,7 +207,17 @@ void USART2_IRQHandler(void)
   /* USER CODE END USART2_IRQn 0 */
   HAL_UART_IRQHandler(&huart2);
   /* USER CODE BEGIN USART2_IRQn 1 */
-
+    if((__HAL_UART_GET_FLAG(&huart2,UART_FLAG_IDLE) != RESET))
+    {
+      //清除空闲状态标志
+      __HAL_UART_CLEAR_IDLEFLAG(&huart2);
+      //关闭DMA传输
+      HAL_UART_DMAStop(&huart2);
+      //计算接收到的数据长度
+      uint8_t rxlen = LIN_RX_MAXSIZE - __HAL_DMA_GET_COUNTER(&hdma_usart2_rx);
+      //调用回调函数
+      USAR_UART_IDLECallback(&huart2,rxlen );
+    }
   /* USER CODE END USART2_IRQn 1 */
 }
 

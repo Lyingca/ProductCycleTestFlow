@@ -53,7 +53,7 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+void USAR_UART_IDLECallback(UART_HandleTypeDef *huart,uint8_t rxlen );
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -65,6 +65,8 @@ void Error_Handler(void);
 #define TJA1028_EN_GPIO_Port GPIOA
 #define TJA1028_RSTN_Pin GPIO_PIN_0
 #define TJA1028_RSTN_GPIO_Port GPIOB
+#define Finished_Key_Pin GPIO_PIN_5
+#define Finished_Key_GPIO_Port GPIOD
 #define Init_Key_Pin GPIO_PIN_3
 #define Init_Key_GPIO_Port GPIOB
 #define Step_Add_Pin GPIO_PIN_4
